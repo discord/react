@@ -696,7 +696,10 @@ function commitRoot(root: FiberRoot, finishedWork: Fiber): void {
       captureCommitPhaseError(nextEffect, error);
       // Clean-up
       if (nextEffect !== null) {
-        nextEffect = nextEffect.nextEffect;
+        const nextNextEffect = nextEffect.nextEffect;
+        // Remove nextEffect pointer to assist GC
+        nextEffect.nextEffect = null;
+        nextEffect = nextNextEffect;
       }
     }
   }
@@ -811,6 +814,16 @@ function commitRoot(root: FiberRoot, finishedWork: Fiber): void {
       return schedulePassiveEffects(callback);
     });
     passiveEffectCallback = callback;
+  } else {
+    // We are done with the effect chain at this point so let's clear the
+    // nextEffect pointers to assist with GC. If we have passive effects, we'll
+    // clear this in commitPassiveEffects.
+    nextEffect = firstEffect;
+    while (nextEffect !== null) {
+      const nextNextEffect = nextEffect.nextEffect;
+      nextEffect.nextEffect = null;
+      nextEffect = nextNextEffect;
+    }
   }
 
   isCommitting = false;

@@ -742,6 +742,12 @@ function commitUnmount(current: Fiber): void {
       return;
     }
   }
+
+  // Remove reference for GC
+  current.stateNode = null;
+  if (current.alternate != null) {
+    current.alternate.stateNode = null;
+  }
 }
 
 function commitNestedUnmounts(root: Fiber): void {
@@ -1038,19 +1044,15 @@ function unmountHostComponents(current): void {
     }
 
     if (node.tag === HostComponent || node.tag === HostText) {
+      // Save stateNode reference so commitUnmount can clear it.
+      const stateNode: Instance | TextInstance = node.stateNode;
       commitNestedUnmounts(node);
       // After all the children have unmounted, it is now safe to remove the
       // node from the tree.
       if (currentParentIsContainer) {
-        removeChildFromContainer(
-          ((currentParent: any): Container),
-          (node.stateNode: Instance | TextInstance),
-        );
+        removeChildFromContainer(((currentParent: any): Container), stateNode);
       } else {
-        removeChild(
-          ((currentParent: any): Instance),
-          (node.stateNode: Instance | TextInstance),
-        );
+        removeChild(((currentParent: any): Instance), stateNode);
       }
       // Don't visit children because we already visited them.
     } else if (
