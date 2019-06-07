@@ -9,17 +9,11 @@
 
 'use strict';
 
-
-
-if (process.env.NODE_ENV !== "production") {
-  (function() {
-'use strict';
-
-var React = require('react');
-var _assign = require('object-assign');
-var checkPropTypes = require('prop-types/checkPropTypes');
-var scheduler = require('scheduler');
-var tracing = require('scheduler/tracing');
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('react')) :
+	typeof define === 'function' && define.amd ? define(['react'], factory) :
+	(global.ReactFire = factory(global.React));
+}(this, (function (React) { 'use strict';
 
 /**
  * Use invariant() to assert state which your program assumes to be true.
@@ -1400,6 +1394,10 @@ function getText() {
   }
   return root.textContent;
 }
+
+var ReactInternals = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+
+var _assign = ReactInternals.assign;
 
 /* eslint valid-typeof: 0 */
 
@@ -3085,6 +3083,111 @@ function getToStringValue(value) {
   }
 }
 
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+
+
+var ReactPropTypesSecret$1 = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
+
+var ReactPropTypesSecret_1 = ReactPropTypesSecret$1;
+
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+
+
+var printWarning = function() {};
+
+{
+  var ReactPropTypesSecret = ReactPropTypesSecret_1;
+  var loggedTypeFailures = {};
+
+  printWarning = function(text) {
+    var message = 'Warning: ' + text;
+    if (typeof console !== 'undefined') {
+      console.error(message);
+    }
+    try {
+      // --- Welcome to debugging React ---
+      // This error was thrown as a convenience so that you can use this stack
+      // to find the callsite that caused this warning to fire.
+      throw new Error(message);
+    } catch (x) {}
+  };
+}
+
+/**
+ * Assert that the values match with the type specs.
+ * Error messages are memorized and will only be shown once.
+ *
+ * @param {object} typeSpecs Map of name to a ReactPropType
+ * @param {object} values Runtime values that need to be type-checked
+ * @param {string} location e.g. "prop", "context", "child context"
+ * @param {string} componentName Name of the component for error messages.
+ * @param {?Function} getStack Returns the component stack.
+ * @private
+ */
+function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
+  {
+    for (var typeSpecName in typeSpecs) {
+      if (typeSpecs.hasOwnProperty(typeSpecName)) {
+        var error;
+        // Prop type validation may throw. In case they do, we don't want to
+        // fail the render phase where it didn't fail before. So we log it.
+        // After these have been cleaned up, we'll let them throw.
+        try {
+          // This is intentionally an invariant that gets caught. It's the same
+          // behavior as without this statement except with a better message.
+          if (typeof typeSpecs[typeSpecName] !== 'function') {
+            var err = Error(
+              (componentName || 'React class') + ': ' + location + ' type `' + typeSpecName + '` is invalid; ' +
+              'it must be a function, usually from the `prop-types` package, but received `' + typeof typeSpecs[typeSpecName] + '`.'
+            );
+            err.name = 'Invariant Violation';
+            throw err;
+          }
+          error = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, ReactPropTypesSecret);
+        } catch (ex) {
+          error = ex;
+        }
+        if (error && !(error instanceof Error)) {
+          printWarning(
+            (componentName || 'React class') + ': type specification of ' +
+            location + ' `' + typeSpecName + '` is invalid; the type checker ' +
+            'function must return `null` or an `Error` but returned a ' + typeof error + '. ' +
+            'You may have forgotten to pass an argument to the type checker ' +
+            'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' +
+            'shape all require an argument).'
+          );
+
+        }
+        if (error instanceof Error && !(error.message in loggedTypeFailures)) {
+          // Only monitor this failure once because there tends to be a lot of the
+          // same error.
+          loggedTypeFailures[error.message] = true;
+
+          var stack = getStack ? getStack() : '';
+
+          printWarning(
+            'Failed ' + location + ' type: ' + error.message + (stack != null ? stack : '')
+          );
+        }
+      }
+    }
+  }
+}
+
+var checkPropTypes_1 = checkPropTypes;
+
 var ReactDebugCurrentFrame$1 = null;
 
 var ReactControlledValuePropTypes = {
@@ -3124,7 +3227,7 @@ var ReactControlledValuePropTypes = {
    * this outside of the ReactDOM controlled form components.
    */
   ReactControlledValuePropTypes.checkPropTypes = function (tagName, props) {
-    checkPropTypes(propTypes, props, 'prop', tagName, ReactDebugCurrentFrame$1.getStackAddendum);
+    checkPropTypes_1(propTypes, props, 'prop', tagName, ReactDebugCurrentFrame$1.getStackAddendum);
   };
 }
 
@@ -8630,6 +8733,25 @@ var updatedAncestorInfo = function () {};
   };
 }
 
+var ReactInternals$1 = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+
+var _ReactInternals$Sched = ReactInternals$1.Scheduler;
+var unstable_cancelCallback = _ReactInternals$Sched.unstable_cancelCallback;
+var unstable_now = _ReactInternals$Sched.unstable_now;
+var unstable_scheduleCallback = _ReactInternals$Sched.unstable_scheduleCallback;
+var unstable_shouldYield = _ReactInternals$Sched.unstable_shouldYield;
+var unstable_getFirstCallbackNode = _ReactInternals$Sched.unstable_getFirstCallbackNode;
+var unstable_runWithPriority = _ReactInternals$Sched.unstable_runWithPriority;
+var unstable_next = _ReactInternals$Sched.unstable_next;
+var unstable_continueExecution = _ReactInternals$Sched.unstable_continueExecution;
+var unstable_pauseExecution = _ReactInternals$Sched.unstable_pauseExecution;
+var unstable_getCurrentPriorityLevel = _ReactInternals$Sched.unstable_getCurrentPriorityLevel;
+var unstable_ImmediatePriority = _ReactInternals$Sched.unstable_ImmediatePriority;
+var unstable_UserBlockingPriority = _ReactInternals$Sched.unstable_UserBlockingPriority;
+var unstable_NormalPriority = _ReactInternals$Sched.unstable_NormalPriority;
+var unstable_LowPriority = _ReactInternals$Sched.unstable_LowPriority;
+var unstable_IdlePriority = _ReactInternals$Sched.unstable_IdlePriority;
+
 // Renderers that don't support persistence
 // can re-export everything from this module.
 
@@ -8795,8 +8917,8 @@ var isPrimaryRenderer = true;
 var scheduleTimeout = typeof setTimeout === 'function' ? setTimeout : undefined;
 var cancelTimeout = typeof clearTimeout === 'function' ? clearTimeout : undefined;
 var noTimeout = -1;
-var schedulePassiveEffects = scheduler.unstable_scheduleCallback;
-var cancelPassiveEffects = scheduler.unstable_cancelCallback;
+var schedulePassiveEffects = unstable_scheduleCallback;
+var cancelPassiveEffects = unstable_cancelCallback;
 
 // -------------------
 //     Mutation
@@ -9659,7 +9781,7 @@ function getMaskedContext(workInProgress, unmaskedContext) {
 
   {
     var name = getComponentName(type) || 'Unknown';
-    checkPropTypes(contextTypes, context, 'context', name, getCurrentFiberStackInDev);
+    checkPropTypes_1(contextTypes, context, 'context', name, getCurrentFiberStackInDev);
   }
 
   // Cache unmasked context so we can avoid recreating masked context unless necessary.
@@ -9730,7 +9852,7 @@ function processChildContext(fiber, type, parentContext) {
   }
   {
     var name = getComponentName(type) || 'Unknown';
-    checkPropTypes(childContextTypes, childContext, 'child context', name,
+    checkPropTypes_1(childContextTypes, childContext, 'child context', name,
     // In practice, there is one case in which we won't get a stack. It's when
     // somebody calls unstable_renderSubtreeIntoContainer() and we process
     // context from the parent component instance. The stack will be missing
@@ -10372,6 +10494,19 @@ function assignFiberPropertiesInDEV(target, source) {
   return target;
 }
 
+var ReactInternals$2 = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+
+var _ReactInternals$Sched$1 = ReactInternals$2.SchedulerTracing;
+var __interactionsRef = _ReactInternals$Sched$1.__interactionsRef;
+var __subscriberRef = _ReactInternals$Sched$1.__subscriberRef;
+var unstable_clear = _ReactInternals$Sched$1.unstable_clear;
+var unstable_getCurrent = _ReactInternals$Sched$1.unstable_getCurrent;
+var unstable_getThreadID = _ReactInternals$Sched$1.unstable_getThreadID;
+var unstable_subscribe = _ReactInternals$Sched$1.unstable_subscribe;
+var unstable_trace = _ReactInternals$Sched$1.unstable_trace;
+var unstable_unsubscribe = _ReactInternals$Sched$1.unstable_unsubscribe;
+var unstable_wrap = _ReactInternals$Sched$1.unstable_wrap;
+
 // TODO: This should be lifted into the renderer.
 
 
@@ -10421,7 +10556,7 @@ function createFiberRoot(containerInfo, isConcurrent, hydrate) {
       firstBatch: null,
       nextScheduledRoot: null,
 
-      interactionThreadID: tracing.unstable_getThreadID(),
+      interactionThreadID: unstable_getThreadID(),
       memoizedInteractions: new Set(),
       pendingInteractionMap: new Map()
     };
@@ -10480,7 +10615,7 @@ function createFiberRoot(containerInfo, isConcurrent, hydrate) {
 var lowPriorityWarning = function () {};
 
 {
-  var printWarning = function (format) {
+  var printWarning$1 = function (format) {
     for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
       args[_key - 1] = arguments[_key];
     }
@@ -10509,7 +10644,7 @@ var lowPriorityWarning = function () {};
         args[_key2 - 2] = arguments[_key2];
       }
 
-      printWarning.apply(undefined, [format].concat(args));
+      printWarning$1.apply(undefined, [format].concat(args));
     }
   };
 }
@@ -14040,7 +14175,7 @@ function recordCommitTime() {
   if (!enableProfilerTimer) {
     return;
   }
-  commitTime = scheduler.unstable_now();
+  commitTime = unstable_now();
 }
 
 function startProfilerTimer(fiber) {
@@ -14048,10 +14183,10 @@ function startProfilerTimer(fiber) {
     return;
   }
 
-  profilerStartTime = scheduler.unstable_now();
+  profilerStartTime = unstable_now();
 
   if (fiber.actualStartTime < 0) {
-    fiber.actualStartTime = scheduler.unstable_now();
+    fiber.actualStartTime = unstable_now();
   }
 }
 
@@ -14068,7 +14203,7 @@ function stopProfilerTimerIfRunningAndRecordDelta(fiber, overrideBaseTime) {
   }
 
   if (profilerStartTime >= 0) {
-    var elapsedTime = scheduler.unstable_now() - profilerStartTime;
+    var elapsedTime = unstable_now() - profilerStartTime;
     fiber.actualDuration += elapsedTime;
     if (overrideBaseTime) {
       fiber.selfBaseDuration = elapsedTime;
@@ -14445,7 +14580,7 @@ function updateForwardRef(current$$1, workInProgress, Component, nextProps, rend
       // because they're only guaranteed to be resolved here.
       var innerPropTypes = Component.propTypes;
       if (innerPropTypes) {
-        checkPropTypes(innerPropTypes, nextProps, // Resolved props
+        checkPropTypes_1(innerPropTypes, nextProps, // Resolved props
         'prop', getComponentName(Component), getCurrentFiberStackInDev);
       }
     }
@@ -14502,7 +14637,7 @@ function updateMemoComponent(current$$1, workInProgress, Component, nextProps, u
       if (innerPropTypes) {
         // Inner memo component props aren't currently validated in createElement.
         // We could move it there, but we'd still need this for lazy code path.
-        checkPropTypes(innerPropTypes, nextProps, // Resolved props
+        checkPropTypes_1(innerPropTypes, nextProps, // Resolved props
         'prop', getComponentName(type), getCurrentFiberStackInDev);
       }
     }
@@ -14518,7 +14653,7 @@ function updateMemoComponent(current$$1, workInProgress, Component, nextProps, u
     if (_innerPropTypes) {
       // Inner memo component props aren't currently validated in createElement.
       // We could move it there, but we'd still need this for lazy code path.
-      checkPropTypes(_innerPropTypes, nextProps, // Resolved props
+      checkPropTypes_1(_innerPropTypes, nextProps, // Resolved props
       'prop', getComponentName(_type), getCurrentFiberStackInDev);
     }
   }
@@ -14561,7 +14696,7 @@ function updateSimpleMemoComponent(current$$1, workInProgress, Component, nextPr
       }
       var outerPropTypes = outerMemoType && outerMemoType.propTypes;
       if (outerPropTypes) {
-        checkPropTypes(outerPropTypes, nextProps, // Resolved (SimpleMemoComponent has no defaultProps)
+        checkPropTypes_1(outerPropTypes, nextProps, // Resolved (SimpleMemoComponent has no defaultProps)
         'prop', getComponentName(outerMemoType), getCurrentFiberStackInDev);
       }
       // Inner propTypes will be validated in the function component path.
@@ -14616,7 +14751,7 @@ function updateFunctionComponent(current$$1, workInProgress, Component, nextProp
       // because they're only guaranteed to be resolved here.
       var innerPropTypes = Component.propTypes;
       if (innerPropTypes) {
-        checkPropTypes(innerPropTypes, nextProps, // Resolved props
+        checkPropTypes_1(innerPropTypes, nextProps, // Resolved props
         'prop', getComponentName(Component), getCurrentFiberStackInDev);
       }
     }
@@ -14658,7 +14793,7 @@ function updateClassComponent(current$$1, workInProgress, Component, nextProps, 
       // because they're only guaranteed to be resolved here.
       var innerPropTypes = Component.propTypes;
       if (innerPropTypes) {
-        checkPropTypes(innerPropTypes, nextProps, // Resolved props
+        checkPropTypes_1(innerPropTypes, nextProps, // Resolved props
         'prop', getComponentName(Component), getCurrentFiberStackInDev);
       }
     }
@@ -14927,7 +15062,7 @@ function mountLazyComponent(_current, workInProgress, elementType, updateExpirat
           if (workInProgress.type !== workInProgress.elementType) {
             var outerPropTypes = Component.propTypes;
             if (outerPropTypes) {
-              checkPropTypes(outerPropTypes, resolvedProps, // Resolved for outer only
+              checkPropTypes_1(outerPropTypes, resolvedProps, // Resolved for outer only
               'prop', getComponentName(Component), getCurrentFiberStackInDev);
             }
           }
@@ -15422,7 +15557,7 @@ function updateContextProvider(current$$1, workInProgress, renderExpirationTime)
     var providerPropTypes = workInProgress.type.propTypes;
 
     if (providerPropTypes) {
-      checkPropTypes(providerPropTypes, newProps, 'prop', 'Context.Provider', getCurrentFiberStackInDev);
+      checkPropTypes_1(providerPropTypes, newProps, 'prop', 'Context.Provider', getCurrentFiberStackInDev);
     }
   }
 
@@ -15686,7 +15821,7 @@ function beginWork(current$$1, workInProgress, renderExpirationTime) {
           if (workInProgress.type !== workInProgress.elementType) {
             var outerPropTypes = _type2.propTypes;
             if (outerPropTypes) {
-              checkPropTypes(outerPropTypes, _resolvedProps3, // Resolved for outer only
+              checkPropTypes_1(outerPropTypes, _resolvedProps3, // Resolved for outer only
               'prop', getComponentName(_type2), getCurrentFiberStackInDev);
             }
           }
@@ -18044,7 +18179,7 @@ function commitWork(current$$1, finishedWork) {
             // Memoize using the boundary fiber to prevent redundant listeners.
             var retry = retryTimedOutBoundary.bind(null, finishedWork, thenable);
             if (enableSchedulerTracing) {
-              retry = tracing.unstable_wrap(retry);
+              retry = unstable_wrap(retry);
             }
             if (!retryCache.has(thenable)) {
               retryCache.add(thenable);
@@ -18154,7 +18289,7 @@ function attachPingListener(root, renderExpirationTime, thenable) {
     threadIDs.add(renderExpirationTime);
     var ping = pingSuspendedRoot.bind(null, root, thenable, renderExpirationTime);
     if (enableSchedulerTracing) {
-      ping = tracing.unstable_wrap(ping);
+      ping = unstable_wrap(ping);
     }
     thenable.then(ping, ping);
   }
@@ -18318,7 +18453,7 @@ function throwException(root, returnFiber, sourceFiber, value, renderExpirationT
           retryCache.add(thenable);
           var retry = retryTimedOutBoundary.bind(null, _workInProgress, thenable);
           if (enableSchedulerTracing) {
-            retry = tracing.unstable_wrap(retry);
+            retry = unstable_wrap(retry);
           }
           thenable.then(retry, retry);
         }
@@ -18481,7 +18616,7 @@ var warnAboutInvalidUpdates = void 0;
 if (enableSchedulerTracing) {
   // Provide explicit error message when production+profiling bundle of e.g. react-dom
   // is used with production (non-profiling) bundle of scheduler/tracing
-  !(tracing.__interactionsRef != null && tracing.__interactionsRef.current != null) ? invariant(false, 'It is not supported to run the profiling version of a renderer (for example, `react-dom/profiling`) without also replacing the `scheduler/tracing` module with `scheduler/tracing-profiling`. Your bundler might have a setting for aliasing both modules. Learn more at http://fb.me/react-profiling') : void 0;
+  !(__interactionsRef != null && __interactionsRef.current != null) ? invariant(false, 'It is not supported to run the profiling version of a renderer (for example, `react-dom/profiling`) without also replacing the `scheduler/tracing` module with `scheduler/tracing-profiling`. Your bundler might have a setting for aliasing both modules. Learn more at http://fb.me/react-profiling') : void 0;
 }
 
 {
@@ -18872,8 +19007,8 @@ function commitRoot(root, finishedWork) {
   if (enableSchedulerTracing) {
     // Restore any pending interactions at this point,
     // So that cascading work triggered during the render phase will be accounted for.
-    prevInteractions = tracing.__interactionsRef.current;
-    tracing.__interactionsRef.current = root.memoizedInteractions;
+    prevInteractions = __interactionsRef.current;
+    __interactionsRef.current = root.memoizedInteractions;
   }
 
   // Reset this to null before calling lifecycles
@@ -18997,9 +19132,9 @@ function commitRoot(root, finishedWork) {
       // TODO: Avoid this extra callback by mutating the tracing ref directly,
       // like we do at the beginning of commitRoot. I've opted not to do that
       // here because that code is still in flux.
-      callback = tracing.unstable_wrap(callback);
+      callback = unstable_wrap(callback);
     }
-    passiveEffectCallbackHandle = scheduler.unstable_runWithPriority(scheduler.unstable_NormalPriority, function () {
+    passiveEffectCallbackHandle = unstable_runWithPriority(unstable_NormalPriority, function () {
       return schedulePassiveEffects(callback);
     });
     passiveEffectCallback = callback;
@@ -19035,12 +19170,12 @@ function commitRoot(root, finishedWork) {
   onCommit(root, earliestRemainingTimeAfterCommit);
 
   if (enableSchedulerTracing) {
-    tracing.__interactionsRef.current = prevInteractions;
+    __interactionsRef.current = prevInteractions;
 
     var subscriber = void 0;
 
     try {
-      subscriber = tracing.__subscriberRef.current;
+      subscriber = __subscriberRef.current;
       if (subscriber !== null && root.memoizedInteractions.size > 0) {
         var threadID = computeThreadID(committedExpirationTime, root.interactionThreadID);
         subscriber.onWorkStopped(root.memoizedInteractions, threadID);
@@ -19436,7 +19571,7 @@ function renderRoot(root, isYieldy) {
       root.memoizedInteractions = interactions;
 
       if (interactions.size > 0) {
-        var subscriber = tracing.__subscriberRef.current;
+        var subscriber = __subscriberRef.current;
         if (subscriber !== null) {
           var threadID = computeThreadID(expirationTime, root.interactionThreadID);
           try {
@@ -19459,8 +19594,8 @@ function renderRoot(root, isYieldy) {
   if (enableSchedulerTracing) {
     // We're about to start new traced work.
     // Restore pending interactions so cascading work triggered during the render phase will be accounted for.
-    prevInteractions = tracing.__interactionsRef.current;
-    tracing.__interactionsRef.current = root.memoizedInteractions;
+    prevInteractions = __interactionsRef.current;
+    __interactionsRef.current = root.memoizedInteractions;
   }
 
   var didFatal = false;
@@ -19534,7 +19669,7 @@ function renderRoot(root, isYieldy) {
 
   if (enableSchedulerTracing) {
     // Traced work is done for now; restore the previous interactions.
-    tracing.__interactionsRef.current = prevInteractions;
+    __interactionsRef.current = prevInteractions;
   }
 
   // We're done performing work. Time to clean up.
@@ -19705,7 +19840,7 @@ function computeUniqueAsyncExpiration() {
 }
 
 function computeExpirationForFiber(currentTime, fiber) {
-  var priorityLevel = scheduler.unstable_getCurrentPriorityLevel();
+  var priorityLevel = unstable_getCurrentPriorityLevel();
 
   var expirationTime = void 0;
   if ((fiber.mode & ConcurrentMode) === NoContext) {
@@ -19716,18 +19851,18 @@ function computeExpirationForFiber(currentTime, fiber) {
     expirationTime = nextRenderExpirationTime;
   } else {
     switch (priorityLevel) {
-      case scheduler.unstable_ImmediatePriority:
+      case unstable_ImmediatePriority:
         expirationTime = Sync;
         break;
-      case scheduler.unstable_UserBlockingPriority:
+      case unstable_UserBlockingPriority:
         expirationTime = computeInteractiveExpiration(currentTime);
         break;
-      case scheduler.unstable_NormalPriority:
+      case unstable_NormalPriority:
         // This is a normal, concurrent update
         expirationTime = computeAsyncExpiration(currentTime);
         break;
-      case scheduler.unstable_LowPriority:
-      case scheduler.unstable_IdlePriority:
+      case unstable_LowPriority:
+      case unstable_IdlePriority:
         expirationTime = Never;
         break;
       default:
@@ -19745,7 +19880,7 @@ function computeExpirationForFiber(currentTime, fiber) {
   // allows us to synchronously flush all interactive updates
   // when needed.
   // TODO: Move this to renderer?
-  if (priorityLevel === scheduler.unstable_UserBlockingPriority && (lowestPriorityPendingInteractiveExpirationTime === NoWork || expirationTime < lowestPriorityPendingInteractiveExpirationTime)) {
+  if (priorityLevel === unstable_UserBlockingPriority && (lowestPriorityPendingInteractiveExpirationTime === NoWork || expirationTime < lowestPriorityPendingInteractiveExpirationTime)) {
     lowestPriorityPendingInteractiveExpirationTime = expirationTime;
   }
 
@@ -19872,7 +20007,7 @@ function scheduleWorkToRoot(fiber, expirationTime) {
 
   if (enableSchedulerTracing) {
     if (root !== null) {
-      var interactions = tracing.__interactionsRef.current;
+      var interactions = __interactionsRef.current;
       if (interactions.size > 0) {
         var pendingInteractionMap = root.pendingInteractionMap;
         var pendingInteractions = pendingInteractionMap.get(expirationTime);
@@ -19894,7 +20029,7 @@ function scheduleWorkToRoot(fiber, expirationTime) {
           });
         }
 
-        var subscriber = tracing.__subscriberRef.current;
+        var subscriber = __subscriberRef.current;
         if (subscriber !== null) {
           var threadID = computeThreadID(expirationTime, root.interactionThreadID);
           subscriber.onWorkScheduled(interactions, threadID);
@@ -19955,7 +20090,7 @@ function scheduleWork(fiber, expirationTime) {
 }
 
 function syncUpdates(fn, a, b, c, d) {
-  return scheduler.unstable_runWithPriority(scheduler.unstable_ImmediatePriority, function () {
+  return unstable_runWithPriority(unstable_ImmediatePriority, function () {
     return fn(a, b, c, d);
   });
 }
@@ -19981,7 +20116,7 @@ var isUnbatchingUpdates = false;
 
 var completedBatches = null;
 
-var originalStartTimeMs = scheduler.unstable_now();
+var originalStartTimeMs = unstable_now();
 var currentRendererTime = msToExpirationTime(originalStartTimeMs);
 var currentSchedulerTime = currentRendererTime;
 
@@ -19991,7 +20126,7 @@ var nestedUpdateCount = 0;
 var lastCommittedRootDuringThisBatch = null;
 
 function recomputeCurrentRendererTime() {
-  var currentTimeMs = scheduler.unstable_now() - originalStartTimeMs;
+  var currentTimeMs = unstable_now() - originalStartTimeMs;
   currentRendererTime = msToExpirationTime(currentTimeMs);
 }
 
@@ -20005,7 +20140,7 @@ function scheduleCallbackWithExpirationTime(root, expirationTime) {
       if (callbackID !== null) {
         // Existing callback has insufficient timeout. Cancel and schedule a
         // new one.
-        scheduler.unstable_cancelCallback(callbackID);
+        unstable_cancelCallback(callbackID);
       }
     }
     // The request callback timer is already running. Don't start a new one.
@@ -20014,10 +20149,10 @@ function scheduleCallbackWithExpirationTime(root, expirationTime) {
   }
 
   callbackExpirationTime = expirationTime;
-  var currentMs = scheduler.unstable_now() - originalStartTimeMs;
+  var currentMs = unstable_now() - originalStartTimeMs;
   var expirationTimeMs = expirationTimeToMs(expirationTime);
   var timeout = expirationTimeMs - currentMs;
-  callbackID = scheduler.unstable_scheduleCallback(performAsyncWork, { timeout: timeout });
+  callbackID = unstable_scheduleCallback(performAsyncWork, { timeout: timeout });
 }
 
 // For every call to renderRoot, one of onFatal, onComplete, onSuspend, and
@@ -20230,7 +20365,7 @@ function shouldYieldToRenderer() {
   if (didYield) {
     return true;
   }
-  if (scheduler.unstable_shouldYield()) {
+  if (unstable_shouldYield()) {
     didYield = true;
     return true;
   }
@@ -20451,7 +20586,7 @@ function completeRoot(root, finishedWork, expirationTime) {
     lastCommittedRootDuringThisBatch = root;
     nestedUpdateCount = 0;
   }
-  scheduler.unstable_runWithPriority(scheduler.unstable_ImmediatePriority, function () {
+  unstable_runWithPriority(unstable_ImmediatePriority, function () {
     commitRoot(root, finishedWork);
   });
 }
@@ -20523,7 +20658,7 @@ function interactiveUpdates$1(fn, a, b) {
   var previousIsBatchingUpdates = isBatchingUpdates;
   isBatchingUpdates = true;
   try {
-    return scheduler.unstable_runWithPriority(scheduler.unstable_UserBlockingPriority, function () {
+    return unstable_runWithPriority(unstable_UserBlockingPriority, function () {
       return fn(a, b);
     });
   } finally {
@@ -21315,6 +21450,6 @@ var ReactFire$1 = ( ReactFire && ReactDOM ) || ReactFire;
 // This is hacky but makes it work with both Rollup and Jest.
 var unstableFire = ReactFire$1.default || ReactFire$1;
 
-module.exports = unstableFire;
-  })();
-}
+return unstableFire;
+
+})));

@@ -17564,6 +17564,13 @@ function commitUnmount(current$$1) {
         current$$1.stateNode.__reactInternalInstance$ = null;
         break;
       }
+    case HostText:
+      {
+        // HACK: detach fiber references from DOM
+        current$$1.stateNode.__reactEventHandlers$ = null;
+        current$$1.stateNode.__reactInternalInstance$ = null;
+        break;
+      }
     case HostPortal:
       {
         // TODO: this is recursive.
