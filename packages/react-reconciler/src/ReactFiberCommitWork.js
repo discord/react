@@ -788,7 +788,7 @@ function commitUnmount(
       if (typeof instance.componentWillUnmount === 'function') {
         safelyCallComponentWillUnmount(current, instance);
       }
-      return;
+      break;
     }
     case HostComponent: {
       if (enableFlareAPI) {
@@ -812,7 +812,7 @@ function commitUnmount(
         beforeRemoveInstance(current.stateNode);
       }
       safelyDetachRef(current);
-      return;
+      break;
     }
     case HostPortal: {
       // TODO: this is recursive.
@@ -823,7 +823,7 @@ function commitUnmount(
       } else if (supportsPersistence) {
         emptyPortalContainer(current);
       }
-      return;
+      break;
     }
     case FundamentalComponent: {
       if (enableFundamentalAPI) {
@@ -852,6 +852,12 @@ function commitUnmount(
         safelyDetachRef(current);
       }
     }
+  }
+
+  // Remove reference for GC
+  current.stateNode = null;
+  if (current.alternate != null) {
+    current.alternate.stateNode = null;
   }
 }
 
@@ -1171,19 +1177,15 @@ function unmountHostComponents(
     }
 
     if (node.tag === HostComponent || node.tag === HostText) {
+      // Save stateNode reference so commitUnmount can clear it.
+      const stateNode: Instance | TextInstance = node.stateNode;
       commitNestedUnmounts(finishedRoot, node, renderPriorityLevel);
       // After all the children have unmounted, it is now safe to remove the
       // node from the tree.
       if (currentParentIsContainer) {
-        removeChildFromContainer(
-          ((currentParent: any): Container),
-          (node.stateNode: Instance | TextInstance),
-        );
+        removeChildFromContainer(((currentParent: any): Container), stateNode);
       } else {
-        removeChild(
-          ((currentParent: any): Instance),
-          (node.stateNode: Instance | TextInstance),
-        );
+        removeChild(((currentParent: any): Instance), stateNode);
       }
       // Don't visit children because we already visited them.
     } else if (enableFundamentalAPI && node.tag === FundamentalComponent) {
