@@ -812,6 +812,15 @@ function commitUnmount(
         beforeRemoveInstance(current.stateNode);
       }
       safelyDetachRef(current);
+      // HACK: detach fiber references from DOM
+      current.stateNode.__reactEventHandlers$ = null;
+      current.stateNode.__reactInternalInstance$ = null;
+      break;
+    }
+    case HostText: {
+      // HACK: detach fiber references from DOM
+      current.stateNode.__reactEventHandlers$ = null;
+      current.stateNode.__reactInternalInstance$ = null;
       break;
     }
     case HostPortal: {
