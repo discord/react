@@ -315,6 +315,10 @@ export function detachDeletedInstance(node: Instance): void {
   // noop
 }
 
+export function detatchFiberStateNode(fiber: Fiber): void {
+  // noop
+}
+
 export function logRecoverableError(error: mixed): void {
   // noop
 }

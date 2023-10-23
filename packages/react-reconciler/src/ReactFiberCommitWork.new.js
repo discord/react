@@ -67,7 +67,6 @@ import {
   CacheComponent,
   TracingMarkerComponent,
 } from './ReactWorkTags';
-import {detachDeletedInstance} from './ReactFiberHostConfig';
 import {
   NoFlags,
   ContentReset,
@@ -1335,6 +1334,12 @@ function detachFiberMutation(fiber: Fiber) {
 }
 
 function detachFiberAfterEffects(fiber: Fiber) {
+  // The `stateNode` is cyclical because on host nodes it points to the host
+  // tree, which has its own pointers to children, parents, and siblings.
+  // The other host nodes also point back to fibers, so we should detach that
+  // one, too.
+  detatchFiberStateNode(fiber);
+
   const alternate = fiber.alternate;
   if (alternate !== null) {
     fiber.alternate = null;
@@ -1368,18 +1373,6 @@ function detachFiberAfterEffects(fiber: Fiber) {
     fiber.child = null;
     fiber.deletions = null;
     fiber.sibling = null;
-
-    // The `stateNode` is cyclical because on host nodes it points to the host
-    // tree, which has its own pointers to children, parents, and siblings.
-    // The other host nodes also point back to fibers, so we should detach that
-    // one, too.
-    if (fiber.tag === HostComponent) {
-      const hostInstance: Instance = fiber.stateNode;
-      if (hostInstance !== null) {
-        detachDeletedInstance(hostInstance);
-      }
-    }
-    fiber.stateNode = null;
 
     // I'm intentionally not clearing the `return` field in this level. We
     // already disconnect the `return` pointer at the root of the deleted
@@ -1736,7 +1729,7 @@ function commitDeletionEffectsOnFiber(
           deletedFiber,
         );
       }
-      return;
+      break;
     }
     case DehydratedFragment: {
       if (enableSuspenseCallback) {
@@ -1767,7 +1760,7 @@ function commitDeletionEffectsOnFiber(
           }
         }
       }
-      return;
+      break;
     }
     case HostPortal: {
       if (supportsMutation) {
@@ -1792,7 +1785,7 @@ function commitDeletionEffectsOnFiber(
           deletedFiber,
         );
       }
-      return;
+      break;
     }
     case FunctionComponent:
     case ForwardRef:
@@ -1856,7 +1849,7 @@ function commitDeletionEffectsOnFiber(
         nearestMountedAncestor,
         deletedFiber,
       );
-      return;
+      break;
     }
     case ClassComponent: {
       if (!offscreenSubtreeWasHidden) {
@@ -1875,7 +1868,7 @@ function commitDeletionEffectsOnFiber(
         nearestMountedAncestor,
         deletedFiber,
       );
-      return;
+      break;
     }
     case ScopeComponent: {
       if (enableScopeAPI) {
@@ -1886,7 +1879,7 @@ function commitDeletionEffectsOnFiber(
         nearestMountedAncestor,
         deletedFiber,
       );
-      return;
+      break;
     }
     case OffscreenComponent: {
       if (
@@ -1927,9 +1920,11 @@ function commitDeletionEffectsOnFiber(
         nearestMountedAncestor,
         deletedFiber,
       );
-      return;
+      break;
     }
   }
+  // GC any references to this fibers state node.
+  detatchFiberStateNode(deletedFiber);
 }
 function commitSuspenseCallback(finishedWork: Fiber) {
   // TODO: Move this to passive phase

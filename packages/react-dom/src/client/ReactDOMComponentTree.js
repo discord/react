@@ -52,6 +52,26 @@ export function detachDeletedInstance(node: Instance): void {
   delete (node: any)[internalEventHandlesSetKey];
 }
 
+export function detatchFiberStateNode(
+  fiberToDetach: Fiber,
+) {
+  if (fiber.tag === HostComponent || fiber.tag === HostText) {
+    const hostInstance: Instance = fiber.stateNode;
+    if (hostInstance !== null) {
+      detachDeletedInstance(hostInstance);
+    }
+  }
+  fiber.stateNode = null;
+
+  if (fiber.alternate !== null) {
+    const alertnateInstance: Instance = fiber.alternate.stateNode;
+    if (alertnateInstance !== null) {
+      detachDeletedInstance(alertnateInstance);
+    }
+    fiber.alternate.stateNode = null;
+  }
+}
+
 export function precacheFiberNode(
   hostInst: Fiber,
   node: Instance | TextInstance | SuspenseInstance | ReactScopeInstance,

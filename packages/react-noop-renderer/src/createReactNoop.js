@@ -474,6 +474,10 @@ function createReactNoop(reconciler: Function, useMutation: boolean) {
 
     detachDeletedInstance() {},
 
+    detatchFiberStateNode() {
+      // no-op
+    },
+
     logRecoverableError() {
       // no-op
     },
