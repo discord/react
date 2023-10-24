@@ -1,8 +1,0 @@
-{
-  "branch": "v18-2-0-with-memory-fixes",
-  "buildNumber": null,
-  "checksum": "d5e02bf",
-  "commit": "f09310935",
-  "environment": "local",
-  "reactVersion": "18.2.0"
-}
