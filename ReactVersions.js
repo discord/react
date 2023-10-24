@@ -25,28 +25,28 @@ const ReactVersion = '18.2.0';
 const nextChannelLabel = 'next';
 
 const stablePackages = {
-  'eslint-plugin-react-hooks': '4.6.0',
-  'jest-react': '0.14.0',
-  react: ReactVersion,
-  'react-art': ReactVersion,
+  // 'eslint-plugin-react-hooks': '4.6.0',
+  // 'jest-react': '0.14.0',
+  // react: ReactVersion,
+  // 'react-art': ReactVersion,
   'react-dom': ReactVersion,
-  'react-is': ReactVersion,
-  'react-reconciler': '0.29.0',
-  'react-refresh': '0.14.0',
-  'react-test-renderer': ReactVersion,
-  'use-subscription': '1.8.0',
-  'use-sync-external-store': '1.2.0',
-  scheduler: '0.23.0',
+  // 'react-is': ReactVersion,
+  // 'react-reconciler': '0.29.0',
+  // 'react-refresh': '0.14.0',
+  // 'react-test-renderer': ReactVersion,
+  // 'use-subscription': '1.8.0',
+  // 'use-sync-external-store': '1.2.0',
+  // scheduler: '0.23.0',
 };
 
 // These packages do not exist in the @next or @latest channel, only
 // @experimental. We don't use semver, just the commit sha, so this is just a
 // list of package names instead of a map.
 const experimentalPackages = [
-  'react-fetch',
-  'react-fs',
-  'react-pg',
-  'react-server-dom-webpack',
+  // 'react-fetch',
+  // 'react-fs',
+  // 'react-pg',
+  // 'react-server-dom-webpack',
 ];
 
 module.exports = {
