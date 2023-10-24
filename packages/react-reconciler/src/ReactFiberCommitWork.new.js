@@ -129,6 +129,7 @@ import {
   prepareScopeUpdate,
   prepareForCommit,
   beforeActiveInstanceBlur,
+  detatchFiberStateNode,
 } from './ReactFiberHostConfig';
 import {
   captureCommitPhaseError,
