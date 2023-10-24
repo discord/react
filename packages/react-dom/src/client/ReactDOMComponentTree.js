@@ -47,6 +47,7 @@ export function detachDeletedInstance(node: Instance): void {
   // these fields are relevant.
   delete (node: any)[internalInstanceKey];
   delete (node: any)[internalPropsKey];
+  delete (node: any)[internalContainerInstanceKey];
   delete (node: any)[internalEventHandlersKey];
   delete (node: any)[internalEventHandlerListenersKey];
   delete (node: any)[internalEventHandlesSetKey];
@@ -55,20 +56,22 @@ export function detachDeletedInstance(node: Instance): void {
 export function detatchFiberStateNode(
   fiberToDetach: Fiber,
 ) {
-  if (fiber.tag === HostComponent || fiber.tag === HostText) {
-    const hostInstance: Instance = fiber.stateNode;
+  if (fiberToDetach.tag === HostComponent || fiberToDetach.tag === HostText) {
+    const hostInstance: Instance = fiberToDetach.stateNode;
     if (hostInstance !== null) {
       detachDeletedInstance(hostInstance);
     }
   }
-  fiber.stateNode = null;
+  fiberToDetach.stateNode = null;
 
-  if (fiber.alternate !== null) {
-    const alertnateInstance: Instance = fiber.alternate.stateNode;
-    if (alertnateInstance !== null) {
-      detachDeletedInstance(alertnateInstance);
+  if (fiberToDetach.alternate !== null) {
+    if (fiberToDetach.alternate.tag === HostComponent || fiberToDetach.alternate.tag === HostText) {
+      const alertnateInstance: Instance = fiberToDetach.alternate.stateNode;
+      if (alertnateInstance !== null) {
+        detachDeletedInstance(alertnateInstance);
+      }
     }
-    fiber.alternate.stateNode = null;
+    fiberToDetach.alternate.stateNode = null;
   }
 }
 
