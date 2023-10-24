@@ -72,13 +72,7 @@ export function detatchFiberStateNode(
   fiberToDetach.stateNode = null;
 
   if (fiberToDetach.alternate !== null) {
-    if (_tagIsDetachable(fiberToDetach.alternate.tag)) {
-      const alertnateInstance: Instance = fiberToDetach.alternate.stateNode;
-      if (alertnateInstance !== null) {
-        detachDeletedInstance(alertnateInstance);
-      }
-    }
-    fiberToDetach.alternate.stateNode = null;
+    detatchFiberStateNode(fiberToDetach.alternate)
   }
 }
 
