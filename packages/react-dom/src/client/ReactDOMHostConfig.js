@@ -24,7 +24,7 @@ import {
   getInstanceFromNode as getInstanceFromNodeDOMTree,
   isContainerMarkedAsRoot,
 } from './ReactDOMComponentTree';
-export {detachDeletedInstance} from './ReactDOMComponentTree';
+export {detachDeletedInstance, detatchFiberStateNode} from './ReactDOMComponentTree';
 import {hasRole} from './DOMAccessibilityRoles';
 import {
   createElement,
