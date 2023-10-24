@@ -53,10 +53,17 @@ export function detachDeletedInstance(node: Instance): void {
   delete (node: any)[internalEventHandlesSetKey];
 }
 
+function _tagIsDetachable(tag: number): boolean {
+  if (tag == null) {
+    return false;
+  }
+  return tag === HostComponent || tag === HostText;
+}
+
 export function detatchFiberStateNode(
   fiberToDetach: Fiber,
 ) {
-  if (fiberToDetach.tag === HostComponent || fiberToDetach.tag === HostText) {
+  if (_tagIsDetachable(fiberToDetach.tag)) {
     const hostInstance: Instance = fiberToDetach.stateNode;
     if (hostInstance !== null) {
       detachDeletedInstance(hostInstance);
@@ -65,7 +72,7 @@ export function detatchFiberStateNode(
   fiberToDetach.stateNode = null;
 
   if (fiberToDetach.alternate !== null) {
-    if (fiberToDetach.alternate.tag === HostComponent || fiberToDetach.alternate.tag === HostText) {
+    if (_tagIsDetachable(fiberToDetach.alternate.tag)) {
       const alertnateInstance: Instance = fiberToDetach.alternate.stateNode;
       if (alertnateInstance !== null) {
         detachDeletedInstance(alertnateInstance);
